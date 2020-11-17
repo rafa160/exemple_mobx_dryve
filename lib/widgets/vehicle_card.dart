@@ -1,6 +1,8 @@
+import 'package:dryve_exp/strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import "package:intl/intl.dart";
+import 'package:number_display/number_display.dart';
 
 class VehicleCard extends StatelessWidget {
   String image;
@@ -12,6 +14,7 @@ class VehicleCard extends StatelessWidget {
   int mileage;
   int price;
   VoidCallback onPressed;
+  Icon icon;
 
   VehicleCard(
       {this.image,
@@ -22,10 +25,17 @@ class VehicleCard extends StatelessWidget {
       this.transmissionType,
       this.mileage,
       this.price,
-      this.onPressed});
+      this.onPressed, this.icon});
 
   @override
   Widget build(BuildContext context) {
+
+    final display = createDisplay(
+      length: 8,
+      decimal: 0,
+      separator: '.'
+    );
+
     return Container(
       height: MediaQuery.of(context).size.height * 1.6,
       child: Column(
@@ -44,7 +54,7 @@ class VehicleCard extends StatelessWidget {
                 top: 2,
                 right: 2,
                 child: IconButton(
-                  icon: Icon(Icons.favorite_border, color: Colors.white),
+                  icon: icon,
                   onPressed: onPressed,
                 ),
               ),
@@ -74,7 +84,7 @@ class VehicleCard extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(top: 5),
             child: Text(
-              '$year'.toString() + ' - ' + '$fuelType',
+              '$year'.toString() + Strings.DIVISOR + '$fuelType',
               style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w700),
             ),
           ),
@@ -90,10 +100,10 @@ class VehicleCard extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  ' - ', style:TextStyle(
+                  Strings.DIVISOR, style:TextStyle(
                     color: Colors.grey, fontWeight: FontWeight.w700),
                 ),Text(
-                    '$mileage'.toString() + ' km',
+                    '${display(mileage)}' + Strings.KM,
                     style: TextStyle(
                         color: Colors.grey, fontWeight: FontWeight.w700),
                   ),
@@ -104,7 +114,7 @@ class VehicleCard extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(top: 5),
             child: Text(
-              'R\$ $price'.toString(),
+              'R\$ ${display(price)}'.toString(),
               style: TextStyle(
                   color: Colors.black.withBlue(100),
                   fontWeight: FontWeight.bold, fontSize: 18),

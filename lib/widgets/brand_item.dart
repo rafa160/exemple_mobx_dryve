@@ -1,10 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:grouped_buttons/grouped_buttons.dart';
 
 class BrandItem extends StatefulWidget {
-  String image;
-  String brandName;
+  final String image;
+  final String brandName;
 
   BrandItem({this.image, this.brandName});
 
@@ -13,16 +14,21 @@ class BrandItem extends StatefulWidget {
 }
 
 class _BrandItemState extends State<BrandItem> {
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(top: 20, left: 20),
-      child: Row(
-        children: [
-
-          Text(widget.brandName, style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w500),),
-        ],
+    return Padding(
+      padding: EdgeInsets.only(top: 20, left: 1),
+      child:  Row(
+          children: [
+        CheckboxGroup(
+        labels: <String>[
+          widget.brandName,
+            ],
+            onSelected: (List<String> checked) => print(checked.toString())
       ),
+          ],
+        ),
     );
   }
 

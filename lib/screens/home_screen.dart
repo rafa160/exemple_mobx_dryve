@@ -31,6 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    bool isPressed = false;
     return Scaffold(
       body: RefreshIndicator(
         color: Colors.black.withBlue(100),
@@ -45,6 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   leading: Image(
                     height: 5,
                     width: 5,
+                    fit: BoxFit.fill,
                     image: AssetImage('assets/logo.png'),
                   ),
                   title: Text(
@@ -59,10 +61,20 @@ class _HomeScreenState extends State<HomeScreen> {
                       color: Colors.grey,
                       onPressed: () {
                         showModalBottomSheet(
-                            context: context,
-                            builder: (BuildContext bc){
-                              return CustomBottomSheet();
-                            }
+                          context: context,
+                          isScrollControlled: true,
+                          backgroundColor: Colors.transparent,
+                          builder: (BuildContext bc) => Container(
+                            height: MediaQuery.of(context).size.height * 0.90,
+                            decoration: new BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: new BorderRadius.only(
+                                topLeft: const Radius.circular(10),
+                                topRight: const Radius.circular(10),
+                              ),
+                            ),
+                            child: CustomBottomSheet(),
+                          ),
                         );
                       },
                     ),
@@ -76,7 +88,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Center(child: CircularProgressIndicator());
                   }
                   if (_vehicleStore.results.status == FutureStatus.rejected) {
-                    Center(child: Text('Error'));
+                    Center(child: Text(Strings.ERROR_TITLE));
                   } else if (_vehicleStore.results.status ==
                       FutureStatus.pending) {
                     return Center(child: CircularProgressIndicator());
@@ -96,16 +108,32 @@ class _HomeScreenState extends State<HomeScreen> {
                                 crossAxisSpacing: 20),
                         itemBuilder: (BuildContext context, int index) {
                           var item = items[index];
-                          return VehicleCard(
-                            image: item.imageUrl,
-                            brandName: item.brandName,
-                            modelName: item.modelName,
-                            year: item.modelYear,
-                            fuelType: item.fuelType,
-                            mileage: item.mileage,
-                            transmissionType: item.transmissionType,
-                            price: item.price,
-                          );
+                          return items[index] == null
+                              ? Container()
+                              : VehicleCard(
+                                  image: item.imageUrl,
+                                  brandName: item.brandName,
+                                  modelName: item.modelName,
+                                  year: item.modelYear,
+                                  fuelType: item.fuelType,
+                                  mileage: item.mileage,
+                                  transmissionType: item.transmissionType,
+                                  price: item.price,
+                                  onPressed: () {
+                                    setState(() {
+                                      isPressed = true;
+                                    });
+                                  },
+                                  icon: isPressed
+                                      ? Icon(
+                                          Icons.favorite,
+                                          color: Colors.white,
+                                        )
+                                      : Icon(
+                                          Icons.favorite_border,
+                                          color: Colors.white,
+                                        ),
+                                );
                         }),
                   );
                 }),
